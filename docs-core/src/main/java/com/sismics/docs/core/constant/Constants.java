@@ -106,15 +106,15 @@ public class Constants {
     /**
      * Register request status: pending.
      */
-    public static final String REGISTER_REQUEST_STATUS_PENDING = "pending";
+    public static final String REGISTER_REQUEST_STATUS_PENDING = "Pending";
 
     /**
      * Register request status: accepted.
      */
-    public static final String REGISTER_REQUEST_STATUS_ACCEPTED = "accepted";
+    public static final String REGISTER_REQUEST_STATUS_ACCEPTED = "Accepted";
 
     /**
      * Register request status: rejected.
      */
-    public static final String REGISTER_REQUEST_STATUS_REJECTED = "rejected";
+    public static final String REGISTER_REQUEST_STATUS_REJECTED = "Rejected";
 }

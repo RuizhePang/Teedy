@@ -11,6 +11,7 @@ import com.google.common.base.Strings;
 import com.sismics.docs.core.constant.AuditLogType;
 import com.sismics.docs.core.constant.Constants;
 import com.sismics.docs.core.model.jpa.RegisterRequest;
+import com.sismics.docs.core.model.jpa.User;
 import com.sismics.docs.core.util.AuditLogUtil;
 import com.sismics.util.context.ThreadLocalContext;
 
@@ -68,12 +69,71 @@ public class RegisterRequestDao {
         
         registerRequest.setCreateDate(new Date());
         registerRequest.setStatus(Constants.REGISTER_REQUEST_STATUS_PENDING);
-        registerRequest.setPassword(hashPassword(registerRequest.getPassword()));
+        // registerRequest.setPassword(hashPassword(registerRequest.getPassword()));
         em.persist(registerRequest);
 
         AuditLogUtil.create(registerRequest, AuditLogType.CREATE, registerRequest.getId());
 
         return registerRequest.getId();
+    }
+
+    /**
+     * Display all register requests
+     */
+    public List<RegisterRequest> getAllRegisterRequests() {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        Query q = em.createQuery("select r from RegisterRequest r where r.deleteDate is null");
+        return q.getResultList();
+    }
+
+    public RegisterRequest getRegisterRequestById(String id) {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        Query q = em.createQuery("select r from RegisterRequest r where r.id = :id and r.deleteDate is null");
+        q.setParameter("id", id);
+        List<?> l = q.getResultList();
+        if (l.size() > 0) {
+            return (RegisterRequest) l.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Approve a register request
+     */
+    public void approveRegisterRequest(String id) throws Exception {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        RegisterRequest registerRequest = getRegisterRequestById(id);
+        if (registerRequest == null) {
+            throw new Exception("RegisterRequestNotFound");
+        }
+        registerRequest.setStatus(Constants.REGISTER_REQUEST_STATUS_ACCEPTED);
+        em.merge(registerRequest);
+        UserDao userDao = new UserDao();
+        User user = new User();
+
+        user.setRoleId(Constants.DEFAULT_USER_ROLE);
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(registerRequest.getPassword());
+        user.setStorageQuota(100000000L);
+
+        userDao.create(user, registerRequest.getId());
+        AuditLogUtil.create(registerRequest, AuditLogType.UPDATE, registerRequest.getId());
+    }
+
+    /**
+     * Reject a register request
+     */
+    public void rejectRegisterRequest(String id) throws Exception {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        RegisterRequest registerRequest = getRegisterRequestById(id);
+        if (registerRequest == null) {
+            throw new Exception("RegisterRequestNotFound");
+        }
+        registerRequest.setStatus(Constants.REGISTER_REQUEST_STATUS_REJECTED);
+        em.merge(registerRequest);
+
+        AuditLogUtil.create(registerRequest, AuditLogType.UPDATE, registerRequest.getId());
     }
 
 

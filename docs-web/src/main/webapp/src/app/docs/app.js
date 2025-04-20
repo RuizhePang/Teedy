@@ -181,6 +181,15 @@ angular.module('docs',
         }
       }
     })
+    .state('settings.user.applications', {
+        url: '/applications',
+        views: {
+            'user': {
+            templateUrl: 'partial/docs/settings.user.applications.html',
+            controller: 'SettingsUserApplications'
+            }
+        }
+    })
     .state('settings.workflow', {
       url: '/workflow',
       views: {
