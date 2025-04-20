@@ -76,9 +76,14 @@
 
           <p class="text-center" ng-if="app.guest_login">&nbsp;</p>
 
+          <button type="button" class="btn btn-primary btn-block" ng-click="openRegister()">
+            <span class="fas fa-user-plus"></span>Sign up
+          </button>
+
           <button type="submit" class="btn btn-default btn-block" ng-click="loginAsGuest()">
             <span class="fas fa-user"></span> {{ 'login.login_as_guest' | translate }}
           </button>
+
         </form>
       </div>
     </div>

@@ -5,5 +5,8 @@
              version="3.0">
   <persistence-unit name="transactions-optional" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <properties>
+        <property name="hibernate.hbm2ddl.auto" value="update"/>
+    </properties>
   </persistence-unit>
 </persistence>

@@ -12,6 +12,7 @@ import com.sismics.rest.util.ValidationUtil;
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
@@ -21,7 +22,7 @@ import jakarta.ws.rs.core.Response;
  *
  * @author Ruizhe PANG
  */
-@Path("/register")
+@Path("/registerRequest")
 public class RegisterRequestResource extends BaseResource{
 
     /**
@@ -37,7 +38,8 @@ public class RegisterRequestResource extends BaseResource{
      * @param password the password
      * @return the response
      */
-    @PUT
+    @POST
+    @Path("/register")
     public Response createRegisterRequest(
         @FormParam("username") String username,
         @FormParam("email") String email,

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ruleset name="Teedy Custom Ruleset" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0">
+    <description>
+        Custom PMD ruleset for Teedy, focusing on specific metrics.
+    </description>
+
+    <!-- Lines of Code (LoC) Rule -->
+    <rule ref="category/java/design.xml/NcssCount">
+        <properties>
+            <property name="methodReportLevel" value="60" />
+            <property name="classReportLevel" value="1500" />
+            <property name="ncssOptions" value="" />
+        </properties>
+    </rule>
+
+    <!-- Cyclomatic Complexity (CC) Rule -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="80" />
+            <property name="methodReportLevel" value="10" />
+            <property name="cycloOptions" value="" />
+        </properties>
+    </rule>
+
+    <!-- Weighted Methods per Class (WMC) Rule -->
+
+    <!-- Coupling Between Objects (CBO) Rule -->
+    <rule ref="category/java/design.xml/CouplingBetweenObjects">
+        <properties>
+            <property name="threshold" value="20" />
+        </properties>
+    </rule>
+
+    <!-- Lack of Cohesion in Methods (LCOM) Rule -->
+    <rule ref="category/java/design.xml/GodClass" />
+</ruleset>
