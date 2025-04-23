@@ -10249,3 +10249,89 @@ org.hibernate.PropertyValueException: not-null property references a null or tra
 20 Apr 2025 23:00:35,771 INFO com.sismics.util.ClasspathScanner.findClasses(ClasspathScanner.java:48) Found 2 classes for AuthenticationHandler 
 20 Apr 2025 23:01:31,722 INFO com.sismics.docs.core.service.InboxService.shutDown(InboxService.java:57) Inbox service shutting down 
 20 Apr 2025 23:01:31,723 INFO com.sismics.docs.core.service.FileService.shutDown(FileService.java:44) File service shutting down 
+21 Apr 2025 00:55:59,018 INFO com.sismics.util.jpa.EMF.getEntityManagerProperties(EMF.java:67) Configuring EntityManager from hibernate.properties 
+21 Apr 2025 00:55:59,269 INFO com.sismics.util.jpa.DbOpenHelper.open(DbOpenHelper.java:57) Opening database and executing incremental updates 
+21 Apr 2025 00:55:59,271 INFO com.sismics.util.jpa.DbOpenHelper.open(DbOpenHelper.java:106) Found database version 31, new version is 31, executing database incremental update scripts 
+21 Apr 2025 00:55:59,271 INFO com.sismics.util.jpa.DbOpenHelper.open(DbOpenHelper.java:108) Database upgrade complete 
+21 Apr 2025 00:55:59,271 INFO com.sismics.util.jpa.EMF.getEntityManagerProperties(EMF.java:67) Configuring EntityManager from hibernate.properties 
+21 Apr 2025 00:56:00,090 INFO com.sismics.util.ClasspathScanner.findClasses(ClasspathScanner.java:48) Found 1 classes for IndexingHandler 
+21 Apr 2025 00:56:00,109 INFO com.sismics.docs.core.util.indexing.LuceneIndexingHandler.initLucene(LuceneIndexingHandler.java:129) Using RAM Lucene storage 
+21 Apr 2025 00:56:00,150 INFO com.sismics.docs.core.service.FileService.startUp(FileService.java:39) File service starting up 
+21 Apr 2025 00:56:00,152 INFO com.sismics.docs.core.service.InboxService.startUp(InboxService.java:52) Inbox service starting up 
+21 Apr 2025 00:56:00,152 INFO com.sismics.docs.core.service.FileSizeService.startUp(FileSizeService.java:30) File size service starting up 
+21 Apr 2025 00:56:00,278 INFO com.sismics.docs.core.service.FileSizeService.lambda$runOneIteration$0(FileSizeService.java:50) No more file to process, stopping the service 
+21 Apr 2025 00:56:00,279 INFO com.sismics.docs.core.service.FileSizeService.shutDown(FileSizeService.java:35) File size service shutting down 
+21 Apr 2025 00:56:10,773 INFO com.sismics.docs.core.util.FileUtil.startProcessingFile(FileUtil.java:225) Processing started for file: e0cb5105-b75a-4932-94bb-9816388c0b50 
+21 Apr 2025 00:56:10,791 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.on(FileProcessingAsyncListener.java:53) File created event: FileCreatedAsyncEvent{fileId=e0cb5105-b75a-4932-94bb-9816388c0b50, language=null} 
+21 Apr 2025 00:56:10,854 INFO com.sismics.util.ClasspathScanner.findClasses(ClasspathScanner.java:48) Found 7 classes for FormatHandler 
+21 Apr 2025 00:56:10,908 ERROR com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:170) Unable to generate thumbnails for: File{id=e0cb5105-b75a-4932-94bb-9816388c0b50, name=EAP.pptx} 
+java.io.IOException: Zip bomb detected! The file would exceed the max. ratio of compressed file size to the size of the expanded data.
+This may indicate that the file is used to inflate memory usage and thus could pose a security risk.
+You can adjust this limit via ZipSecureFile.setMinInflateRatio() if you need to work with files which exceed this limit.
+Uncompressed size: 106496, Raw/compressed size: 216, ratio: 0.002028
+Limits: MIN_INFLATE_RATIO: 0.010000, Entry: ppt/media/image2.tif
+	at org.apache.poi.openxml4j.util.ZipArchiveThresholdInputStream.checkThreshold(ZipArchiveThresholdInputStream.java:143)
+	at org.apache.poi.openxml4j.util.ZipArchiveThresholdInputStream.read(ZipArchiveThresholdInputStream.java:82)
+	at org.apache.poi.util.IOUtils.toByteArray(IOUtils.java:185)
+	at org.apache.poi.openxml4j.util.ZipArchiveFakeEntry.<init>(ZipArchiveFakeEntry.java:72)
+	at org.apache.poi.openxml4j.util.ZipInputStreamZipEntrySource.<init>(ZipInputStreamZipEntrySource.java:98)
+	at org.apache.poi.openxml4j.opc.ZipPackage.<init>(ZipPackage.java:132)
+	at org.apache.poi.openxml4j.opc.OPCPackage.open(OPCPackage.java:312)
+	at org.apache.poi.ooxml.util.PackageHelper.open(PackageHelper.java:59)
+	at org.apache.poi.ooxml.util.PackageHelper.open(PackageHelper.java:47)
+	at org.apache.poi.xslf.usermodel.XMLSlideShow.<init>(XMLSlideShow.java:137)
+	at com.sismics.docs.core.util.format.PptxFormatHandler.loadPPtxFile(PptxFormatHandler.java:76)
+	at com.sismics.docs.core.util.format.PptxFormatHandler.generateThumbnail(PptxFormatHandler.java:42)
+	at com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:150)
+	at com.sismics.docs.core.listener.async.FileProcessingAsyncListener.processFile(FileProcessingAsyncListener.java:104)
+	at com.sismics.docs.core.listener.async.FileProcessingAsyncListener.on(FileProcessingAsyncListener.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at com.google.common.eventbus.Subscriber.invokeSubscriberMethod(Subscriber.java:85)
+	at com.google.common.eventbus.Subscriber.lambda$dispatchEvent$0(Subscriber.java:71)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+21 Apr 2025 00:56:10,909 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:176) Start extracting content from: File{id=e0cb5105-b75a-4932-94bb-9816388c0b50, name=EAP.pptx} 
+21 Apr 2025 00:56:10,933 ERROR com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:180) Error extracting content from: File{id=e0cb5105-b75a-4932-94bb-9816388c0b50, name=EAP.pptx} 
+java.io.IOException: Zip bomb detected! The file would exceed the max. ratio of compressed file size to the size of the expanded data.
+This may indicate that the file is used to inflate memory usage and thus could pose a security risk.
+You can adjust this limit via ZipSecureFile.setMinInflateRatio() if you need to work with files which exceed this limit.
+Uncompressed size: 106496, Raw/compressed size: 216, ratio: 0.002028
+Limits: MIN_INFLATE_RATIO: 0.010000, Entry: ppt/media/image2.tif
+	at org.apache.poi.openxml4j.util.ZipArchiveThresholdInputStream.checkThreshold(ZipArchiveThresholdInputStream.java:143)
+	at org.apache.poi.openxml4j.util.ZipArchiveThresholdInputStream.read(ZipArchiveThresholdInputStream.java:82)
+	at org.apache.poi.util.IOUtils.toByteArray(IOUtils.java:185)
+	at org.apache.poi.openxml4j.util.ZipArchiveFakeEntry.<init>(ZipArchiveFakeEntry.java:72)
+	at org.apache.poi.openxml4j.util.ZipInputStreamZipEntrySource.<init>(ZipInputStreamZipEntrySource.java:98)
+	at org.apache.poi.openxml4j.opc.ZipPackage.<init>(ZipPackage.java:132)
+	at org.apache.poi.openxml4j.opc.OPCPackage.open(OPCPackage.java:312)
+	at org.apache.poi.ooxml.util.PackageHelper.open(PackageHelper.java:59)
+	at org.apache.poi.ooxml.util.PackageHelper.open(PackageHelper.java:47)
+	at org.apache.poi.xslf.usermodel.XMLSlideShow.<init>(XMLSlideShow.java:137)
+	at com.sismics.docs.core.util.format.PptxFormatHandler.loadPPtxFile(PptxFormatHandler.java:76)
+	at com.sismics.docs.core.util.format.PptxFormatHandler.extractContent(PptxFormatHandler.java:52)
+	at com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:178)
+	at com.sismics.docs.core.listener.async.FileProcessingAsyncListener.processFile(FileProcessingAsyncListener.java:104)
+	at com.sismics.docs.core.listener.async.FileProcessingAsyncListener.on(FileProcessingAsyncListener.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at com.google.common.eventbus.Subscriber.invokeSubscriberMethod(Subscriber.java:85)
+	at com.google.common.eventbus.Subscriber.lambda$dispatchEvent$0(Subscriber.java:71)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+21 Apr 2025 00:56:10,933 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:182) File content extracted in 24ms: e0cb5105-b75a-4932-94bb-9816388c0b50 
+21 Apr 2025 00:56:10,971 INFO com.sismics.docs.core.util.FileUtil.endProcessingFile(FileUtil.java:235) Processing ended for file: e0cb5105-b75a-4932-94bb-9816388c0b50 
+21 Apr 2025 00:56:21,509 INFO com.sismics.docs.core.util.FileUtil.startProcessingFile(FileUtil.java:225) Processing started for file: 823421b8-33bf-48a7-8219-4deab3004bf6 
+21 Apr 2025 00:56:21,514 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.on(FileProcessingAsyncListener.java:53) File created event: FileCreatedAsyncEvent{fileId=823421b8-33bf-48a7-8219-4deab3004bf6, language=null} 
+21 Apr 2025 00:56:22,965 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:176) Start extracting content from: File{id=823421b8-33bf-48a7-8219-4deab3004bf6, name=3. Lit. retrieval sheet.docx} 
+21 Apr 2025 00:56:22,987 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:182) File content extracted in 22ms: 823421b8-33bf-48a7-8219-4deab3004bf6 
+21 Apr 2025 00:56:22,995 INFO com.sismics.docs.core.util.FileUtil.endProcessingFile(FileUtil.java:235) Processing ended for file: 823421b8-33bf-48a7-8219-4deab3004bf6 
+21 Apr 2025 01:04:27,569 INFO com.sismics.docs.core.util.FileUtil.startProcessingFile(FileUtil.java:225) Processing started for file: 545acea6-f528-4d0f-99b1-e95c5a9af746 
+21 Apr 2025 01:04:27,581 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.on(FileProcessingAsyncListener.java:53) File created event: FileCreatedAsyncEvent{fileId=545acea6-f528-4d0f-99b1-e95c5a9af746, language=null} 
+21 Apr 2025 01:04:27,750 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:176) Start extracting content from: File{id=545acea6-f528-4d0f-99b1-e95c5a9af746, name=cs201_lecture6.pdf} 
+21 Apr 2025 01:04:27,815 INFO com.sismics.docs.core.listener.async.FileProcessingAsyncListener.extractContent(FileProcessingAsyncListener.java:182) File content extracted in 64ms: 545acea6-f528-4d0f-99b1-e95c5a9af746 
+21 Apr 2025 01:04:27,824 INFO com.sismics.docs.core.util.FileUtil.endProcessingFile(FileUtil.java:235) Processing ended for file: 545acea6-f528-4d0f-99b1-e95c5a9af746 
+21 Apr 2025 14:15:18,644 INFO com.sismics.docs.core.service.InboxService.shutDown(InboxService.java:57) Inbox service shutting down 
+21 Apr 2025 14:15:18,647 INFO com.sismics.docs.core.service.FileService.shutDown(FileService.java:44) File service shutting down 
