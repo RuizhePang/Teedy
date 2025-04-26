@@ -181,6 +181,15 @@ angular.module('docs',
         }
       }
     })
+    .state('settings.user.applications', {
+        url: '/applications',
+        views: {
+            'user': {
+            templateUrl: 'partial/docs/settings.user.applications.html',
+            controller: 'SettingsUserApplications'
+            }
+        }
+    })
     .state('settings.workflow', {
       url: '/workflow',
       views: {
@@ -364,6 +373,15 @@ angular.module('docs',
         }
       }
     })
+    .state('register', {
+      url: '/register',
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/register.html',
+          controller: 'Register'
+        }
+      }
+    })
     .state('user', {
       url: '/user',
       abstract: true,
@@ -418,6 +436,7 @@ angular.module('docs',
         }
       }
     });
+
 
   // Configuring Restangular
   RestangularProvider.setBaseUrl('../api');

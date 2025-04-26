@@ -1,0 +1,71 @@
+<style>
+  /* No navbar in login screen */
+  .navbar {
+    display: none;
+  }
+
+  /* Absolute positionned footer on top of the login background */
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: none;
+  }
+
+  @media screen and (min-width: 768px) {
+    .footer {
+      width: 50%;
+    }
+  }
+
+  /* Smaller links everywhere on login */
+  a {
+    font-size: 90%;
+    color: #666;
+  }
+</style>
+<div class="row vertical-center">
+  <div class="col-sm-6 col-xs-12 login-box">
+    <div class="row">
+      <div class="col-lg-offset-4 col-lg-4 col-xs-offset-1 col-xs-10">
+        <img src="img/title.png" class="img-responsive" />
+
+        <form>
+          <div class="form-group">
+            <label class="sr-only" for="inputUsername">username</label>
+            <input class="form-control" type="text" id="inputUsername" name="username"
+                   placeholder="username" ng-model="user.username" />
+          </div>
+
+          <div class="form-group">
+            <label class="sr-only" for="inputEmail">email</label>
+            <input class="form-control" type="text" id="inputEmail" name="email"
+                   placeholder="email" ng-model="user.email" />
+          </div>
+
+          <div class="form-group">
+            <label class="sr-only" for="inputPassword">password</label>
+            <input class="form-control" type="password" id="inputPassword" name="password"
+                   placeholder="password" ng-model="user.password" />
+          </div>
+
+          <div class="form-group">
+            <label class="sr-only" for="confirmPassword">confirm password</label>
+            <input class="form-control" type="password" id="confirmPassword" name="confirmPassword"
+                   placeholder="confirm password" ng-model="user.confirmPassword" />
+          </div>
+
+          <p class="text-center" ng-if="app.guest_login">&nbsp;</p>
+
+          <button type="button" class="btn btn-default btn-block" ng-click="register()">
+            <span class="fas fa-user-plus"></span>Sign up
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-img-container col-sm-6 hidden-xs"></div>
+</div>
