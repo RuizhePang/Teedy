@@ -44,18 +44,10 @@ sh 'mvn package -DskipTests'
 }
 post {
 always {
-archiveArtifacts artifacts: '**/target/site/**/*
-archiveArtifacts artifacts: '**/target/**/*
-archiveArtifacts artifacts: '**/target/**/*
-.jar'
-.war'
-junit '**/target/surefire-reports/*
-.xml'
-*'
-.
-, fingerprint: true
-, fingerprint: true
-, fingerprint: true
+archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
+archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
+archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
+junit '**/target/surefire-reports/*.xml'
 }
 }
 }
