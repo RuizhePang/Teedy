@@ -271,4 +271,22 @@ public class FileUtil {
             return File.UNKNOWN_SIZE;
         }
     }
+
+    public static java.io.File decryptFile(String fileId, User user) throws IOException {
+        Path storedFile = DirectoryUtil.getStorageDirectory().resolve(fileId);
+        if (! Files.exists(storedFile)) {
+            log.debug("File does not exist " + fileId);
+            return null;
+        }
+        try (InputStream fileInputStream = Files.newInputStream(storedFile);
+             InputStream inputStream = EncryptionUtil.decryptInputStream(fileInputStream, user.getPrivateKey());
+        ) {
+            Path tmpFile = AppContext.getInstance().getFileService().createTemporaryFile();
+            Files.copy(inputStream, tmpFile);
+            return tmpFile.toFile();
+        } catch (Exception e) {
+            log.debug("Can't decrypt file " + fileId, e);
+            return null;
+        }
+    }
 }
