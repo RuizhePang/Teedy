@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.sismics.docs.rest.constant"},{"l":"com.sismics.docs.rest.resource"},{"l":"com.sismics.docs.rest.util"}];updateSearchResults();

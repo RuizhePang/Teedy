@@ -30,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -269,6 +270,26 @@ public class FileUtil {
         } catch (Exception e) {
             log.debug("Can't find size of file " + fileId, e);
             return File.UNKNOWN_SIZE;
+        }
+    }
+
+    public static java.io.File decryptFile(String fileId, User user) throws IOException {
+        Path storedFile = DirectoryUtil.getStorageDirectory().resolve(fileId);
+        if (!Files.exists(storedFile)) {
+            log.debug("File does not exist " + fileId);
+            return null;
+        }
+        Path tempFile = Files.createTempFile("decrypted", "-" + fileId);
+        try (InputStream fileInputStream = Files.newInputStream(storedFile);
+            InputStream inputStream = EncryptionUtil.decryptInputStream(fileInputStream, user.getPrivateKey());
+            OutputStream outputStream = Files.newOutputStream(tempFile);    
+        ) {
+            IOUtils.copy(inputStream, outputStream);
+            return tempFile.toFile();
+        } catch (Exception e) {
+            log.debug("Can't find size of file " + fileId, e);
+            Files.deleteIfExists(tempFile);
+            return null;
         }
     }
 }

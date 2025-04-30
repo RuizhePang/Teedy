@@ -4,18 +4,29 @@
  * File modal view controller.
  */
 angular.module('docs').controller('FileModalView', function ($uibModalInstance, $scope, $state, $stateParams, $sce, Restangular, $transitions) {
+  $scope.lang = $stateParams.lang || null;
+
   var setFile = function (files) {
     // Search current file
+    console.log($stateParams.fileId + ($scope.lang ? "_" + $scope.lang : ""));
+    $scope.file = undefined;
     _.each(files, function (value) {
-      if (value.id === $stateParams.fileId) {
+      if (value.id === $stateParams.fileId + ($scope.lang ? "_" + $scope.lang : "")) {
         $scope.file = value;
         $scope.trustedFileUrl = $sce.trustAsResourceUrl('../api/file/' + $stateParams.fileId + '/data');
       }
     });
+    if (!$scope.file) {
+        console.log("File not found");
+        // translate the file
+        Restangular.one('file/' + $stateParams.fileId + '/translate').get({ lang: $scope.lang }).then(function (data) {
+        })
+    }
   };
 
-  // Load files
+  //Load files
   Restangular.one('file/list').get({ id: $stateParams.id }).then(function (data) {
+    console.log(data);
     $scope.files = data.files;
     setFile(data.files);
 
@@ -122,5 +133,10 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
    */
   $scope.canDisplayPreview = function () {
     return $scope.file && $scope.file.mimetype !== 'application/pdf';
+  };
+
+  $scope.changeLang = function(lang) {
+    $scope.lang = lang;
+    setFile($scope.file.translations);
   };
 });

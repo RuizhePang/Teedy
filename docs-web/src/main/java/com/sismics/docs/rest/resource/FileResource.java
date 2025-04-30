@@ -440,6 +440,70 @@ public class FileResource extends BaseResource {
     }
 
     /**
+     * Translate the file
+     *
+     * @api {get} /file/:id/translate Translate a file
+     * @apiName GetFileTranslate
+     * @apiGroup File
+     * @apiSuccess {String} status Status OK
+     * @apiError (client) ForbiddenError Access denied
+     * @apiError (client) NotFound File not found
+     * @apiError (server) ServiceUnavailable Error reading the file
+     * 
+     * @param id fileId File ID
+     * @param String language translate language
+     * @return Response
+     */
+    @GET
+    @Path("{id: [a-z0-9\\-]+}/translate")
+    public Response translate(
+            @PathParam("id") String id,
+            @QueryParam("lang") String language) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+
+        // Get the file
+        File file = findFile(id, null);
+        FileDao fileDao = new FileDao();
+        System.out.println(file);
+
+        UserDao userDao = new UserDao();
+        User user = userDao.getById(file.getUserId());
+
+        java.io.File fileDb;
+        try {
+            fileDb = FileUtil.decryptFile(id, user);
+        } catch (IOException e) {
+            throw new WebApplicationException(e);
+        }
+        System.out.println("file name " + fileDb.getPath());
+
+
+        // Get the document
+        // Translate the file
+        try {
+            java.nio.file.Path storedFile = DirectoryUtil.getStorageDirectory().resolve(file.getId());
+            System.out.println("storedFile Path " + storedFile.getFileName());
+            // java.nio.file.Path unencryptedFile = EncryptionUtil.decryptFile(storedFile, principal.getPrivateKey());
+            FileUtil.startProcessingFile(file.getId());
+            FileUpdatedAsyncEvent event = new FileUpdatedAsyncEvent();
+            event.setUserId(principal.getId());
+            event.setLanguage(language);
+            event.setFileId(file.getId());
+            // event.setUnencryptedFile(unencryptedFile);
+            ThreadLocalContext.get().addAsyncEvent(event);
+        } catch (Exception e) {
+            throw new ServerException("ServiceUnavailable", "Error reading the file", e);
+        }
+
+        // Always return OK
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("status", "ok");
+        return Response.ok().entity(response.build()).build();
+    }
+
+    /**
      * List all versions of a file.
      *
      * @api {get} /file/:id/versions Get versions of a file

@@ -9,6 +9,14 @@ angular.module('share').controller('FileView', function($uibModal, $state, $stat
     templateUrl: 'partial/share/file.view.html',
     controller: 'FileModalView',
     size: 'lg'
+    resolve: {
+      lang: function() {
+          return $stateParams.lang;
+      },
+      fileId: function() {
+          return $stateParams.fileId;
+      }
+    }
   });
 
   // Returns to share view on file close

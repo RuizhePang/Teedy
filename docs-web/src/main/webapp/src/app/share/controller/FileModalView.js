@@ -4,16 +4,17 @@
  * File modal view controller.
  */
 angular.module('share').controller('FileModalView', function($uibModalInstance, $scope, $state, $stateParams, Restangular, $transitions) {
-  // Load files
-  Restangular.one('file/list').get({ id: $stateParams.documentId, share: $stateParams.shareId }).then(function(data) {
+  $scope.lang = $stateParams.lang || null;
+  //Load files
+  Restangular.one('file/list').get({ id: $stateParams.id }).then(function (data) {
     $scope.files = data.files;
 
-    // Search current file
-    _.each($scope.files, function(value) {
-      if (value.id === $stateParams.fileId) {
-        $scope.file = value;
-      }
-    });
+    // File not found, maybe it's a version
+    if (!$scope.file) {
+      Restangular.one('file/' + $stateParams.fileId + '/versions').get().then(function (data) {
+        setFile(data.files);
+      });
+    }
   });
 
   /**

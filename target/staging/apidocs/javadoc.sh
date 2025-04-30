@@ -1,1 +1,0 @@
-/nix/store/i43yq5k7nphs1paam9xyrzypzjkn97p1-zulu-ca-jdk-21.0.4/zulu-21.jdk/Contents/Home/bin/javadoc @options @packages

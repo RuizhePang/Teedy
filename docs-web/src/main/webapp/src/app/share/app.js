@@ -34,14 +34,14 @@ angular.module('share',
       }
     }
   })
-    .state('share.file', {
-      url: '/file/:fileId',
-      views: {
-        'file': {
-          controller: 'FileView'
-        }
+  .state('share.file', {
+    url: '/file/:fileId',
+    views: {
+      'file': {
+        controller: 'FileView'
       }
-    })
+    }
+  })
   .state('403', {
     url: '/403',
     views: {
