@@ -100,8 +100,8 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
   
   $scope.translateFile = function(language) {
     Restangular.one('file/' + $stateParams.fileId + '/translate').get({language: language}).then(function (data) {
-      console.log(data.files);
-      setFile(data.files);
+      console.log(data);
+      $state.go('^.file', { id: $stateParams.id, fileId: value.id });
     });
   };
 

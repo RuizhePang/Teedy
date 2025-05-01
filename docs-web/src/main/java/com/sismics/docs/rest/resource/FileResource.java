@@ -32,6 +32,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -49,6 +50,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -528,23 +530,31 @@ public class FileResource extends BaseResource {
 
         // Get the file
         File file = findFile(id, null);
-        
-
         // Translate the file
+        java.io.File storedFile = null;
         try {
-            FileUtil.translateFile(file, language, user);
+            storedFile = FileUtil.translateFile(file, language, user);
         } catch (Exception e) {
             throw new ServerException("FileError", "Error translating the file", e);
         }
 
-        // Always return OK
-        JsonObjectBuilder response = Json.createObjectBuilder()
-                .add("status", "ok")
-                .add("id", file.getId())
-                .add("size", file.getSize());
-        return Response.ok().entity(response.build()).build();
+        String fileId = null;
+        try {
+            long fileSize = Files.size(storedFile.toPath());
+            fileId = FileUtil.createFile(storedFile.getName(), file.getId(), storedFile.toPath(), fileSize, language, principal.getId(), file.getDocumentId());
+        } catch (IOException e) {
+            throw new ClientException(e.getMessage(), e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ServerException("FileError", "Error adding a file", e);
+        }
+        file = new FileDao().getFile(fileId);
+        if (file == null) {
+            throw new NotFoundException();
+        }
+        JsonObjectBuilder fileJson = RestUtil.fileToJsonObjectBuilder(file);
+        storedFile.delete(); // Delete the temporary file
+        return Response.ok().entity(fileJson.build()).build();
     }
-        
     
     /**
      * Deletes a file.

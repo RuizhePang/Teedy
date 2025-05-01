@@ -307,7 +307,7 @@ public class FileUtil {
         }
     }
 
-    public static void translateFile(File file, String language, User user) throws Exception {
+    public static java.io.File translateFile(File file, String language, User user) throws Exception {
         java.io.File ioFile = decryptFile(file.getId(), user);
         
         String accessToken = "24.0de9e87730bb10a866bf3dd3d1ac3e9d.2592000.1748674788.282335-118716685";
@@ -448,6 +448,8 @@ public class FileUtil {
         }
         java.io.File myFile = new java.io.File(filename);
         myFile.renameTo(new java.io.File(file.getName().substring(0, file.getName().lastIndexOf('.')) + "_" + language + "." + inputFormat));
+        myFile = new java.io.File(file.getName().substring(0, file.getName().lastIndexOf('.')) + "_" + language + "." + inputFormat);
         ioFile.delete();
+        return myFile;
     }
 }
