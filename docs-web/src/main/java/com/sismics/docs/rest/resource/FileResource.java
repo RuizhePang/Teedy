@@ -489,6 +489,62 @@ public class FileResource extends BaseResource {
                 .add("files", files);
         return Response.ok().entity(response.build()).build();
     }
+
+    /**
+     * Translate a file.
+     * @api {get} /file/:id/translate Translate a file
+     * @apiName GetFileTranslate
+     * @apiGroup File
+     * @apiParam {String} id File ID
+     * @apiParam {String} language Language
+     * @apiSuccess {String} status Status OK
+     * @apiSuccess {String} id File ID
+     * @apiSuccess {Number} size File size (in bytes)
+     * @apiError (client) ForbiddenError Access denied
+     * @apiError (client) ValidationError Validation error
+     * @apiError (client) NotFound File not found
+     * @apiError (server) FileError Error translating the file
+     * @apiPermission user
+     * @apiVersion 1.5.0
+     *  
+     *  @param id File ID
+     *  @param language Language
+     *  @return Response
+     */
+    @GET
+    @Path("{id: [a-z0-9\\-]+}/translate")
+    public Response translate(
+            @PathParam("id") String id,
+            @QueryParam("language") String language) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+
+        // Validate input data
+        ValidationUtil.validateRequired(language, "language");
+
+        UserDao userDao = new UserDao();
+        User user = userDao.getById(principal.getId());
+
+        // Get the file
+        File file = findFile(id, null);
+        
+
+        // Translate the file
+        try {
+            FileUtil.translateFile(file, language, user);
+        } catch (Exception e) {
+            throw new ServerException("FileError", "Error translating the file", e);
+        }
+
+        // Always return OK
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("id", file.getId())
+                .add("size", file.getSize());
+        return Response.ok().entity(response.build()).build();
+    }
+        
     
     /**
      * Deletes a file.

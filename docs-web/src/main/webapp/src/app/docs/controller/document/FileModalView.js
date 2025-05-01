@@ -97,6 +97,13 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
       popup.close();
     }
   };
+  
+  $scope.translateFile = function(language) {
+    Restangular.one('file/' + $stateParams.fileId + '/translate').get({language: language}).then(function (data) {
+      console.log(data.files);
+      setFile(data.files);
+    });
+  };
 
   /**
    * Close the file preview.
