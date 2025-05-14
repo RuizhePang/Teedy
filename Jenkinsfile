@@ -4,7 +4,7 @@ pipeline {
         maven 'M4'
     }
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials')
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub')
         DOCKER_IMAGE = 'ruizhepang/teedy'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
     }
