@@ -1,51 +1,42 @@
 pipeline {
     agent any
-    tools {
-        maven 'M4'
-    }
+
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub')
-        DOCKER_IMAGE = 'ruizhepang/teedy'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        IMAGE_NAME = 'ruizhepang/teedy:latest'
+        DEPLOYMENT_NAME = 'hello-node'
+        CONTAINER_NAME = 'docs'
     }
+
     stages {
-        stage('Build') {
+        stage('Start Minikube') {
             steps {
-                checkout scmGit(
-                    branches: [[name: '*/master']],
-                    extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/RuizhePang/Teedy.git']]
-                )
-                sh 'mvn -B -DskipTests clean package'
+                sh '''
+                if ! minikube status | grep -q "Running"; then
+                    echo "Starting Minikube..."
+                    minikube start
+                else
+                    echo "Minikube already running."
+                fi
+                '''
             }
         }
-        stage('Building image') {
+
+        stage('Set Image') {
             steps {
-                script {
-                    docker.build("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}")
-                }
+                sh '''
+                echo "Setting image for deployment..."
+                kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_NAME}
+                '''
             }
         }
-        stage('Upload image') {
+
+        stage('Verify') {
             steps {
-                script {
-                    sh """
-                        docker login -u ruizhepang -p 'Docker190504'
-                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
-                        docker tag ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ${env.DOCKER_IMAGE}:latest
-                        docker push ${env.DOCKER_IMAGE}:latest
-                    """
-                }
-            }
-        }
-        stage('Run containers') {
-            steps {
-                script {
-                    sh 'docker stop teedy-container-8081 || true'
-                    sh 'docker rm teedy-container-8081 || true'
-                    sh "docker run --name teedy-container-8081 -d -p 8081:8080 ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
-                    sh 'docker ps --filter "name=teedy-container"'
-                }
+                sh '''
+                echo "Checking rollout status..."
+                kubectl rollout status deployment/${DEPLOYMENT_NAME}
+                kubectl get pods
+                '''
             }
         }
     }
